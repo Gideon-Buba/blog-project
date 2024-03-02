@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="<%= locals.description %>">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <title> <%= locals.title %> </title>
     <link rel="stylesheet" href="/css/styles.css">
     <script type="text/javascript" defer src="/js/script.js" ></script>
 </head>
 <body>
+
+    <%- include("../partials/search.ejs") %>
     <div class="container">
         <%- include("../partials/header.ejs") %>
         <main class="main">
@@ -15,5 +19,9 @@
         </main>
         <%- include("../partials/footer.ejs") %>
     </div>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
 </body>
 </html>
