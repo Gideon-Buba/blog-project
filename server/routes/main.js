@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const PostController = require('../controllers/post')
 
 router.get("", (req, res) => {
   const locals = {
@@ -13,5 +14,7 @@ router.get("", (req, res) => {
 router.get("/about", (req, res) => {
   res.render("about");
 });
+
+router.post('/posts', PostController.createPost)
 
 module.exports = router;
