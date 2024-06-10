@@ -1,21 +1,31 @@
 <div class="author">
-    <h1 class="author__heading">👋🏾 Hello, I'm Gideon.</h1>
-    <p class="author__body">Full-Stack Developer.</p>
+  <h1 class="author__heading">👋🏾 Hello, I'm Gideon.</h1>
+  <p class="author__body">Full-Stack Developer.</p>
 </div>
 
-<img data-aos="fade-up" src="/img/hero.webp" alt="hero-img" class="hero-image" width="981" height="528"> 
-
+<img
+  data-aos="fade-up"
+  src="/img/hero.webp"
+  alt="Hero image of Gideon"
+  class="hero-image"
+  width="981"
+  height="528"
+/>
 
 <section class="articles">
-    <h2 class="articles__headings">Latests Posts</h2>
-    <ul class="article-ul"> 
-        <li>
-            <a href="#">
-                <span>Post Title</span>
-                <span class="article-list__date">Date</span>
-            </a>
-        </li>
-    </ul>
-
-    <a href="#" class="pagination">&lt; View Older Posts</a>
+  <h2 class="articles__headings">Latest Posts</h2>
+  <ul class="article-ul">
+    <% data.forEach(post => { %>
+    <li>
+      <a href="/posts/<%= encodeURIComponent(post.title) %>">
+        <span><%= post.title %></span>
+        <span class="article-list__date">
+          <%= new Date(post.createdAt).toLocaleDateString(undefined, { year:
+          'numeric', month: 'long', day: 'numeric' }) %>
+        </span>
+      </a>
+    </li>
+    <% }) %>
+  </ul>
+  <a href="#" class="pagination">&lt; View Older Posts</a>
 </section>
