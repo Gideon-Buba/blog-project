@@ -1,42 +1,20 @@
+// routes/main.js
 const express = require("express");
 const router = express.Router();
 const PostController = require("../controllers/post");
 const Post = require("../models/Post");
+const paginatedResults = require("../routes/middleware/pagination");
 
 /**
  * GET home page with pagination.
  */
-router.get("/", async (req, res) => {
-  try {
-    const locals = {
-      title: "Gideon-Blog",
-      description: "Blog Project by Gideon Buba",
-    };
-
-    const perPage = 10; // Number of posts per page
-    const page = parseInt(req.query.page) || 1; // Get the page number from query parameters, default to 1
-
-    // Aggregation pipeline to sort posts by createdAt in descending order
-    const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
-      .skip(perPage * (page - 1)) // Skip the documents for previous pages
-      .limit(perPage); // Limit the result to the perPage value
-
-    // Get the total count of posts
-    const count = await Post.countDocuments();
-
-    const nextPage = page + 1; // Calculate the next page number
-    const hasNextPage = nextPage <= Math.ceil(count / perPage); // Determine if there is a next page
-
-    res.render("index", {
-      locals,
-      data,
-      currentPage: page,
-      nextPage: hasNextPage ? nextPage : null, // Pass the next page number if it exists
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Internal Server Error");
-  }
+router.get("/", paginatedResults(Post), (req, res) => {
+  res.render("index", {
+    locals: res.locals.locals,
+    data: res.locals.data,
+    currentPage: res.locals.currentPage,
+    nextPage: res.locals.nextPage,
+  });
 });
 
 /**
