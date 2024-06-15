@@ -15,24 +15,25 @@ const paginatedResults = (model) => {
       const perPage = 10; // Number of posts per page
       const page = parseInt(req.query.page) || 1; // Get the page number from query parameters, default to 1
 
-      // Aggregation pipeline to sort posts by createdAt in descending order
-      const data = await model
-        .aggregate([{ $sort: { createdAt: -1 } }])
+      // Ensure model is a Mongoose model and create a query
+      const query = model
+        .find()
+        .sort({ createdAt: -1 })
         .skip(perPage * (page - 1))
         .limit(perPage);
+      const data = await query.exec();
 
-      // Get the total count of posts
       const count = await model.countDocuments();
 
       const nextPage = page + 1;
-      const hasNextPage = nextPage <= Math.ceil(count / perPage); // Determine if there is a next page
+      const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
       res.locals = {
         ...res.locals,
         locals,
         data,
         currentPage: page,
-        nextPage: hasNextPage ? nextPage : null, // Pass the next page number if it exists
+        nextPage: hasNextPage ? nextPage : null,
       };
 
       next();
