@@ -17,12 +17,11 @@
   <ul class="article-ul">
     <% data.forEach(post => { %>
     <li>
-      <a href="/posts/<%= encodeURIComponent(post.title) %>">
+      <a href="/post/<%= post._id %>">
         <span><%= post.title %></span>
-        <span class="article-list__date">
-          <%= new Date(post.createdAt).toLocaleDateString(undefined, { year:
-          'numeric', month: 'long', day: 'numeric' }) %>
-        </span>
+        <span class="article-list__date"
+          ><%= post.createdAt.toDateString() %></span
+        >
       </a>
     </li>
     <% }) %>
