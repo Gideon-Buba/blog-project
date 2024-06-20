@@ -58,62 +58,32 @@ router.get("/post/:id", async (req, res) => {
 /**
  * POST searchTerm
  */
-router.post(
-  "/search",
-  [
-    body("searchTerm")
-      .trim()
-      .escape()
-      .isLength({ min: 1 })
-      .withMessage("Search term cannot be empty."),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).render("search", {
-        locals: {
-          title: "Search",
-          description: "Simple Blog created with NodeJs, Express & MongoDb.",
-        },
-        data: [],
-        currentRoute: "/search",
-        errors: errors.array(),
-      });
-    }
+router.post("/search", async (req, res) => {
+  try {
+    const locals = {
+      title: "Seach",
+      description: "Simple Blog created with NodeJs, Express & MongoDb.",
+    };
 
-    try {
-      const locals = {
-        title: "Search",
-        description: "Simple Blog created with NodeJs, Express & MongoDb.",
-      };
+    let searchTerm = req.body.searchTerm;
+    const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
 
-      const searchTerm = req.body.searchTerm;
-      const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
+    const data = await Post.find({
+      $or: [
+        { title: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+        { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+      ],
+    });
 
-      const data = await Post.find({
-        $or: [
-          { title: { $regex: new RegExp(searchNoSpecialChar, "i") } },
-          { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
-        ],
-      });
-
-      res.render("search", {
-        data,
-        locals,
-        currentRoute: "/search",
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).render("500", {
-        locals: {
-          title: "Internal Server Error",
-          description:
-            "Something went wrong on our end. Please try again later.",
-        },
-      });
-    }
+    res.render("search", {
+      data,
+      locals,
+      currentRoute: "/",
+    });
+  } catch (error) {
+    console.log(error);
   }
-);
+});
 
 /**
  * GET about page.
